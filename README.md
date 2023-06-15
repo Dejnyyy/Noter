@@ -10,7 +10,7 @@ Maybe if it all goes well.. I will make an app of this website and will make not
 # Calendar
 I know that there are calendar apps but I don't want to make it as calendar but more likely as and app to write reminders into or app where you can write notes about anything what botheres you.
 For example, if you are going gym.. you can write here every pr on the date when you did it.. or if you want to start learning something, you can type here everyday how much time you spent studying.
-If you read books, you can write when did you read which book or if you watch moovies or series a lot, then you can make it as a list of your "already seen" movies.
+If you read books, you can write when did you read which book or if you watch movies or series a lot, then you can make it as a list of your "already seen" movies.
 
 # Started This Project 15.6.23
 I hope I will make something out of this project and I believe it can end up being such a usefull app or at least website for everyone.
