@@ -10,3 +10,14 @@
     box-shadow:0px 0px 15px black;
     
 }
+.butno:active{
+    outline: none;
+    border:none;
+}
+
+button:active {
+    outline: none;
+    border: none;
+}
+.butno:focus {outline:0;}
+button:focus {outline:0;}
