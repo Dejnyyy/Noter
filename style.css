@@ -1,0 +1,12 @@
+.alert:hover{
+    border: 1px solid lightgrey;
+    transition: 1s;
+    box-shadow:0px 0px 15px black;
+}
+button:hover{
+    
+    border: 1px solid lightgrey;
+    transition: 1s;
+    box-shadow:0px 0px 15px black;
+    
+}
