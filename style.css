@@ -1,13 +1,4 @@
-input[type="text"]:focus,
-textarea:focus,
-select:focus {
-  outline: none !important;
-}
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: none;
-}
+
 .alert:hover{
     border: 1px solid lightgrey;
     transition: 1s;
@@ -29,13 +20,7 @@ button:active {
     outline: none;
     border: none;
 }
-.butno:focus {outline:0;}
-button:focus {outline:0;}
 
-input:active {
-    outline: none;
-    border: none;
-}
 /* Remove blue outline from buttons */
 .btn:focus,
 .btn:active,

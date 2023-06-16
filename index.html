@@ -47,6 +47,11 @@
             <div class="form-group">
               <input type="text" id="noteInput" class="form-control" rows="3" placeholder="Enter a note"></input>
             </div>
+            <div id="noteRequirements" style="color: red; display: none;">
+              <ul>
+                <li>Note must be shorter than 64 characters</li>
+              </ul>
+            </div>
             <button type="submit"style="border: 1px solid grey" class="btn butno">Add Note</button>
           </form>
         </div>
@@ -83,7 +88,16 @@
       // Function to add a note
       function addNote() {
         var note = noteInput.value.trim();
+        
         if (note !== "") {
+          // Check if the note exceeds the character limit
+          if (note.length > 60) {
+            var noteRequirements = document.getElementById("noteRequirements");
+            noteRequirements.style.color = "red";
+            noteRequirements.style.display = "block";
+            return;
+          }
+          
           var noteObject = {
             date: currentDate.toDateString(),
             note: note,
@@ -91,6 +105,7 @@
           notes.push(noteObject);
           renderNotes();
           noteInput.value = "";
+          hideNoteRequirements();
         }
       }
 
@@ -99,41 +114,47 @@
         notes.splice(index, 1);
         renderNotes();
       }
-// Function to render the notes on the page
-function renderNotes() {
-  notesList.innerHTML = "";
-  notes.forEach(function (noteObject, index) {
-    if (noteObject.date === currentDate.toDateString()) {
-      var noteItem = document.createElement("div");
-      noteItem.className =
-        "alert  d-flex justify-content-between align-items-center";
-      noteItem.innerHTML = `
-        <span>${noteObject.note}</span>
-        <button type="button" class="btn-close" aria-label="Remove" onclick="removeNote(${index})"></button>
-      `;
-      notesList.appendChild(noteItem);
-    }
-  });
-}
 
-// Function to update the displayed date and render notes
-function updateDate() {
-  var formattedDate = currentDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  dateElement.textContent = formattedDate;
+      // Function to render the notes on the page
+      function renderNotes() {
+        notesList.innerHTML = "";
+        notes.forEach(function (noteObject, index) {
+          if (noteObject.date === currentDate.toDateString()) {
+            var noteItem = document.createElement("div");
+            noteItem.className =
+              "alert  d-flex justify-content-between align-items-center";
+            noteItem.innerHTML = `
+              <span>${noteObject.note}</span>
+              <button type="button" class="btn-close" aria-label="Remove"style="outline: none; box-shadow: none;" onclick="removeNote(${index})"></button>
+            `;
+            notesList.appendChild(noteItem);
+          }
+        });
+      }
 
-  if (currentDate.toDateString() === new Date().toDateString()) {
-    maintextElement.style.display = "block";
-  } else {
-    maintextElement.style.display = "none";
-  }
+      // Function to update the displayed date and render notes
+      function updateDate() {
+        var formattedDate = currentDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        dateElement.textContent = formattedDate;
 
-  renderNotes(); // Render notes for the updated date
-}
+        if (currentDate.toDateString() === new Date().toDateString()) {
+          maintextElement.style.display = "block";
+        } else {
+          maintextElement.style.display = "none";
+        }
 
+        renderNotes(); // Render notes for the updated date
+      }
+
+      // Function to hide the note requirements message
+      function hideNoteRequirements() {
+        var noteRequirements = document.getElementById("noteRequirements");
+        noteRequirements.style.display = "none";
+      }
 
       // Event listener for the "Decrease" button
       decreaseButton.addEventListener("click", function () {
