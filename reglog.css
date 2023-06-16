@@ -206,7 +206,7 @@ input:active{
     border: none;
 }
 .butnos:hover{
-    box-shadow: 0px 0px 15px white;
+    box-shadow: 0px 0px 20px white;
     transition:1s;
   
 }

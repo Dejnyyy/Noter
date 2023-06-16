@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" href="reglog.css">
+  <title>Noter-RegisterForm</title>
+</head>
+<body>
+  <div class="homer">
+    <button onclick="window.location.href='index.html'" class="btn butnos ml-2 mt-1" style="border: 1px solid grey;color:white;">Home</button>
+  </div>
+  <div class="container">
+    <div class="content">
+      <h1 class="title">The register form
+        <div class="aurora">
+          <div class="aurora__item"></div>
+          <div class="aurora__item"></div>
+          <div class="aurora__item"></div>
+          <div class="aurora__item"></div>
+        </div>
+      </h1>
+      <p class="subtitle">Made with love and only the CSS.</p>
+    </div>
+    <section class="formsec text-center">
+      <form onsubmit="return validateForm()">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Email address</label>
+          <input type="email" class="form-control" style="width: 60%; transform: translate(35%,-10%);" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="example@email.com" required>
+          <div id="emailHelp" class="form-text" style="color:grey;">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label><br>
+          <label style="color:grey"for="">At least 1 lower/upper case letter and number</label>
+         
+          <input type="password" class="form-control" style="width: 60%; transform: translate(35%,-10%);" id="exampleInputPassword1" placeholder="* * * * * * * *" required oninput="resetPasswordValidation()">
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" style="width: 60%; transform: translate(35%,-10%);" id="exampleInputPassword1" placeholder="* * * * * * * *" required>
+        </div>
+        <div id="passwordRequirements" style="color: red; display: none;">
+          <ul>
+            <li>Password must be at least 8 characters long</li>
+            <li>Contain at least one uppercase letter</li>
+            <li>Contain at least one lowercase letter</li>
+            <li>Contain at least one number</li>
+          </ul>
+        </div>
+        <button type="submit" style="color:white;" class="btn butnos">Register</button>
+      </form>
+    </section>
+  </div>
+  <script>
+    function validateForm() {
+      var email = document.getElementById("exampleInputEmail1").value;
+      var password = document.getElementById("exampleInputPassword1").value;
+
+      // Email validation
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address");
+        return false;
+      }
+
+      // Password validation
+      var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+      if (!passwordRegex.test(password)) {
+        var passwordRequirements = document.getElementById("passwordRequirements");
+        passwordRequirements.style.color = "red";
+        passwordRequirements.style.display = "block";
+
+        var requirementsList = passwordRequirements.getElementsByTagName("li");
+        for (var i = 0; i < requirementsList.length; i++) {
+          var requirement = requirementsList[i];
+          var requirementRegex = new RegExp(requirement.textContent);
+          if (requirementRegex.test(password)) {
+            requirement.style.display = "none";
+          }
+        }
+
+        return false;
+      }
+
+      return true;
+    }
+
+    function resetPasswordValidation() {
+      var passwordRequirements = document.getElementById("passwordRequirements");
+      passwordRequirements.style.display = "none";
+
+      var requirementsList = passwordRequirements.getElementsByTagName("li");
+      for (var i = 0; i < requirementsList.length; i++) {
+        var requirement = requirementsList[i];
+        requirement.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
