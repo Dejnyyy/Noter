@@ -213,3 +213,18 @@ input:active{
 .butnos{
     border: 1px solid white;
 }
+/* Remove blue outline from buttons */
+.btn:focus,
+.btn:active,
+.btn:active:focus {
+  outline: none;
+  box-shadow: none;
+  border:1px solid grey;
+}
+
+/* Remove blue outline from inputs */
+.form-control:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid grey;
+}
