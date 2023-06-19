@@ -203,6 +203,40 @@
         downloadLink.download = "notes.json";
         downloadLink.click();
       }
+      function renderNotes() {
+  notesList.innerHTML = "";
+  notes.forEach(function (noteObject, index) {
+    if (noteObject.date === currentDate.toDateString()) {
+      var noteItem = document.createElement("div");
+      noteItem.className =
+        "alert  d-flex justify-content-between align-items-center";
+      noteItem.innerHTML = `
+        <span>${noteObject.note}</span>
+        <button type="button" class="btn-close" aria-label="Remove" style="outline: none; box-shadow: none;" onclick="removeNoteAndSave(${index})"></button>
+      `;
+      notesList.appendChild(noteItem);
+    }
+  });
+
+  // Display notes from notes.json
+  fetch("notes.json")
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      var notesJson = JSON.stringify(data, null, 2);
+      var notesJsonItem = document.createElement("div");
+      notesJsonItem.className =
+        "alert alert-info d-flex justify-content-between align-items-center";
+      notesJsonItem.innerHTML = `
+        <pre>${notesJson}</pre>
+      `;
+      notesList.appendChild(notesJsonItem);
+    })
+    .catch(function (error) {
+      console.log("Error loading notes JSON:", error);
+    });
+}
 
       // Initialize the date when the page loads
       updateDate();
