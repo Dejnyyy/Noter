@@ -23,7 +23,9 @@
           <div class="aurora__item"></div>
         </div>
       </h1>
+      <br>
       <p class="subtitle">Made with love and only the CSS.</p>
+      <br>
     </div>
     <section class="formsec text-center">
       <form onsubmit="return validateForm()">
@@ -35,11 +37,12 @@
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label">Password</label><br>
           <input type="password" class="form-control" style="width: 60%; transform: translate(35%,-10%);" id="exampleInputPassword1" placeholder="* * * * * * * *" required oninput="resetPasswordValidation()">
-          <div id="emailHelp" class="form-text" style="color:grey;">At least 1 lower/upper case letter and number</div>
+          <div id="passHelp" class="form-text" style="color:grey;">At least 1 lower/upper case letter and number</div>
         </div>
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
           <input type="password" class="form-control" style="width: 60%; transform: translate(35%,-10%);" id="exampleInputPassword1" placeholder="* * * * * * * *" required>
+          <div id="confpassHelp" class="form-text" style="color:grey;">Must be same as above</div>
         </div>
         <div id="passwordRequirements" style="color: red; display: none;">
           <ul>
