@@ -129,7 +129,6 @@
         year: "numeric",
         month: "long",
         day: "numeric",
-        
     });
     
     dateElement.textContent = formattedDate;
@@ -144,52 +143,57 @@
     }
 
     function addNote() {
-    var note = noteInput.value.trim();
-    if (note.length < 3) {
-        var noteRequirements = document.getElementById("note0Requirements");
-        noteRequirements.style.display = "block";
-        return;
-    } else if (note.length > 60) {
-        var noteRequirements = document.getElementById("noteRequirements");
-        noteRequirements.style.display = "block";
-        return;
-    }
+        var note = noteInput.value.trim();
+        if (note.length < 3) {
+            var noteRequirements = document.getElementById("note0Requirements");
+            noteRequirements.style.display = "block";
+            return;
+        } else if (note.length > 60) {
+            var noteRequirements = document.getElementById("noteRequirements");
+            noteRequirements.style.display = "block";
+            return;
+        }
 
-    var noteObject = {
-        date: currentDate.toDateString(),
-        note: note,
-    };
+        var timestamp = new Date().toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
 
-    notes.push(noteObject);
-    noteInput.value = "";
-    renderNotes();
+        var noteObject = {
+            date: currentDate.toDateString(),
+            time: timestamp,
+            note: note,
+        };
+
+        notes.push(noteObject);
+        noteInput.value = "";
+        renderNotes();
     }
 
     function removeNoteAndSave(index) {
-  removeNote(index);
-  saveNotesAsJSON();
-}
+    removeNote(index);
+    saveNotesAsJSON();
+    }
 
-function removeNote(index) {
-  notes.splice(index, 1);
-  renderNotes();
-}
+    function removeNote(index) {
+    notes.splice(index, 1);
+    renderNotes();
+    }
 
     function renderNotes() {
-    
-    notesList.innerHTML = "";
-    notes.forEach(function (noteObject, index) {
-        if (noteObject.date === currentDate.toDateString()) {
-        var noteItem = document.createElement("div");
-        noteItem.className =
-            "alert  d-flex justify-content-between align-items-center";
-        noteItem.innerHTML = `
-            <span>${noteObject.note}</span>
-            <button type="button" class="btn-close" aria-label="Remove" style="outline: none; box-shadow: none;" onclick="removeNoteAndSave(${index})"></button>
-        `;
-        notesList.appendChild(noteItem);
-        }
-    });
+        notesList.innerHTML = "";
+        notes.forEach(function (noteObject, index) {
+            if (noteObject.date === currentDate.toDateString()) {
+                var noteItem = document.createElement("div");
+                noteItem.className =
+                    "alert  d-flex justify-content-between align-items-center";
+                noteItem.innerHTML = `
+                    <span>${noteObject.note} - ${noteObject.time}</span>
+                    <button type="button" class="btn-close" aria-label="Remove" style="outline: none; box-shadow: none;" onclick="removeNoteAndSave(${index})"></button>
+                `;
+                notesList.appendChild(noteItem);
+            }
+        });
     }
 
     decreaseButton.addEventListener("click", decreaseDate);
@@ -202,87 +206,64 @@ function removeNote(index) {
 
     function saveNotesAsJSON() {
     var notesJSON = JSON.stringify(notes);
-    var blob = new Blob([notesJSON], { type: "application/json"+"\n" });
+    var blob = new Blob([notesJSON], { type: "application/json" });
     var downloadLink = document.createElement("a");
     downloadLink.href = URL.createObjectURL(blob);
     downloadLink.download = "notes.json";
     downloadLink.click();
     }
-    
-compareNotes();
-   
-function renderNotes() {
-notesList.innerHTML = "";
-notes.forEach(function (noteObject, index) {
-if (noteObject.date === currentDate.toDateString()) {
-    var noteItem = document.createElement("div");
-    noteItem.className =
-    "alert  d-flex justify-content-between align-items-center";
-    noteItem.innerHTML = `
-    <span>${noteObject.note}</span>
-    <button type="button" class="btn-close" aria-label="Remove" style="outline: none; box-shadow: none;" onclick="removeNoteAndSave(${index})"></button>
-    `;
-    notesList.appendChild(noteItem);
-}
-});
-}
-function compareNotes() {
-fetch("notes.json")
-.then(function (response) {
-    return response.json();
-})
-.then(function (data) {
-    // Check if any new notes are present in the JSON file
-    data.forEach(function (noteObject) {
-    if (
-        noteObject.date === currentDate.toDateString() &&
-        !notes.find((note) => note.note === noteObject.note)
-    ) {
-        var noteItem = document.createElement("div");
-        noteItem.className =
-        "alert  d-flex justify-content-between align-items-center";
-        noteItem.innerHTML = `
-        <span>${noteObject.note}</span>
-        <button type="button" class="btn-close" aria-label="Remove" style="outline: none; box-shadow: none;"></button>
-        `;
-        notesList.appendChild(noteItem);
-        notes.push(noteObject);
+
+    function compareNotes() {
+    fetch("notes.json")
+        .then(function (response) {
+        return response.json();
+        })
+        .then(function (data) {
+        var currentDateNotes = data.filter(function (noteObject) {
+            return noteObject.date === currentDate.toDateString();
+        });
+
+        // Check if any new notes are present in the JSON file
+        currentDateNotes.forEach(function (noteObject) {
+            if (!notes.find((note) => note.note === noteObject.note)) {
+            var noteItem = document.createElement("div");
+            noteItem.className =
+                "alert  d-flex justify-content-between align-items-center";
+            noteItem.innerHTML = `
+                <span>${noteObject.note}</span>
+                `;
+            notesList.appendChild(noteItem);
+            notes.push(noteObject);
+            }
+        });
+
+        // Check if any notes from the JSON file have been removed
+        notes = notes.filter(function (note) {
+            if (
+            note.date === currentDate.toDateString() &&
+            currentDateNotes.find((noteObject) => noteObject.note === note.note)
+            ) {
+            return true;
+            }
+            return false;
+        });
+
+        // Render the updated notes
+        renderNotes();
+        })
+        .catch(function (error) {
+        console.log("Error loading notes JSON:", error);
+        });
     }
-    });
 
-    // Check if any notes from the JSON file have been removed
-    notes = notes.filter(function (note) {
-    if (
-        note.date === currentDate.toDateString() &&
-        !data.find((noteObject) => noteObject.note === note.note)
-    ) {
-        return false;
-    }
-    return true;
-    });
-
-    // Render the updated notes
-    renderNotes();
-})
-.catch(function (error) {
-    console.log("Error loading notes JSON:", error);
-});
-}
-
-
-
-
-// Run the comparison every 3 seconds
+    // Run the comparison every 3 seconds
     setInterval(compareNotes, 3000);
     // Initialize the date when the page loads
     updateDate();
-
-    //facha
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/FileSaver.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Qv4jG6yZn+OW9wX/PHxX8BXvT5Qcjhmq5cKk0Hw0b6h0NE" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-2Hpm3OuXtH9Nlq0W0W3qehbAp1rVhru//HEKg39f1KUSn3bOFlr0QDKkevLcvoqX" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
