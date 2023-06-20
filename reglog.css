@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap");
 
+::selection{
+  background-color: white;
+  color: black;
+}
+
 :root {
   --bg: #000000;
   --clr-1: #00c2ff;

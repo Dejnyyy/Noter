@@ -14,7 +14,9 @@
     integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
     crossorigin="anonymous"
 />
+
 <link rel="stylesheet" href="style.css">
+
 <style>
     .container {
     margin-top: 20px;
@@ -25,6 +27,7 @@
 </style>
 </head>
 <body>
+
 <div class="loger">
     <button
     onclick="window.location.href='log.html'"
@@ -163,15 +166,14 @@
     }
 
     function removeNoteAndSave(index) {
-    removeNote(index);
-    saveNotesAsJSON();
-    }
+  removeNote(index);
+  saveNotesAsJSON();
+}
 
-    function removeNote(index) {
-    notes.splice(index, 1);
-    renderNotes();
-    removeNoteAndSave(index);
-    }
+function removeNote(index) {
+  notes.splice(index, 1);
+  renderNotes();
+}
 
     function renderNotes() {
     
@@ -270,11 +272,8 @@ fetch("notes.json")
 
 
 
-// Run the comparison every 20 seconds
-    setInterval(compareNotes, 20000);
-
-
-
+// Run the comparison every 3 seconds
+    setInterval(compareNotes, 3000);
     // Initialize the date when the page loads
     updateDate();
 

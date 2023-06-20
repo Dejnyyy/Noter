@@ -1,4 +1,9 @@
 
+::selection{
+  background-color: black;
+  color: white;
+}
+
 .alert:hover{
     border: 1px solid lightgrey;
     transition: 1s;
@@ -36,4 +41,3 @@ button:active {
   box-shadow: none;
   border: 1px solid grey;
 }
-
