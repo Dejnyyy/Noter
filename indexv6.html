@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes App</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="mt-4">Notes App</h1>
+    <div class="mt-4">
+      <h4 id="date"></h4>
+      <p id="maintext" style="display: none;">Welcome to today's notes!</p>
+      <button id="decreaseDate" class="btn btn-primary">Previous Day</button>
+      <button id="increaseDate" class="btn btn-primary">Next Day</button>
+    </div>
+    <form id="addNoteForm" class="mt-4">
+      <div class="form-group">
+        <label for="noteInput">Add Note</label>
+        <input type="text" id="noteInput" class="form-control" placeholder="Enter a note">
+        <small id="noteRequirements" class="text-danger" style="display: none;">Note must be between 3 and 60 characters.</small>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <div id="notesList" class="mt-4"></div>
+  </div>
+
+  <script>
+    var currentDate = new Date();
+    var dateElement = document.getElementById("date");
+    var maintextElement = document.getElementById("maintext");
+    var decreaseButton = document.getElementById("decreaseDate");
+    var increaseButton = document.getElementById("increaseDate");
+    var addNoteForm = document.getElementById("addNoteForm");
+    var noteInput = document.getElementById("noteInput");
+    var notesList = document.getElementById("notesList");
+    var notes = [];
+
+    function decreaseDate() {
+      currentDate.setDate(currentDate.getDate() - 1);
+      updateDate();
+    }
+
+    function increaseDate() {
+      currentDate.setDate(currentDate.getDate() + 1);
+      updateDate();
+    }
+
+    function updateDate() {
+      var formattedDate = currentDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      dateElement.textContent = formattedDate;
+
+      if (currentDate.toDateString() === new Date().toDateString()) {
+        maintextElement.style.display = "block";
+      } else {
+        maintextElement.style.display = "none";
+      }
+
+      renderNotes();
+    }
+
+    function addNote() {
+      var note = noteInput.value.trim();
+      if (note.length < 3 || note.length > 60) {
+        var noteRequirements = document.getElementById("noteRequirements");
+        noteRequirements.style.display = "block";
+        return;
+      }
+
+      var timestamp = new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      var noteObject = {
+        date: currentDate.toDateString(),
+        time: timestamp,
+        note: note,
+      };
+
+      notes.push(noteObject);
+      noteInput.value = "";
+      noteRequirements.style.display = "none";
+
+      // Write notes to file
+      writeNotesToFile();
+      // Render the updated notes
+      renderNotes();
+    }
+
+    function removeNote(index) {
+      notes.splice(index, 1);
+
+      // Write notes to file
+      writeNotesToFile();
+      // Render the updated notes
+      renderNotes();
+    }
+
+    function writeNotesToFile() {
+      var notesJSON = JSON.stringify(notes);
+      // Send the notes to the server for writing to a file
+      fetch("/write-notes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: notesJSON,
+      })
+        .then(function (response) {
+          if (response.ok) {
+            console.log("Notes written to file successfully.");
+          } else {
+            throw new Error("Failed to write notes to file.");
+          }
+        })
+        .catch(function (error) {
+          console.log("Error writing notes to file:", error);
+        });
+    }
+
+    function renderNotes() {
+      notesList.innerHTML = "";
+
+      var currentDateNotes = notes.filter(function (noteObject) {
+        return noteObject.date === currentDate.toDateString();
+      });
+
+      currentDateNotes.forEach(function (noteObject, index) {
+        var noteItem = document.createElement("div");
+        noteItem.className =
+          "alert  d-flex justify-content-between align-items-center";
+        noteItem.innerHTML = `
+          <span>${noteObject.note}</span>
+          <button class="btn btn-danger" onclick="removeNote(${index})">Delete</button>
+        `;
+        notesList.appendChild(noteItem);
+      });
+    }
+
+    decreaseButton.addEventListener("click", decreaseDate);
+    increaseButton.addEventListener("click", increaseDate);
+    addNoteForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      addNote();
+    });
+
+    // Initialize the date when the page loads
+    updateDate();
+  </script>
+</body>
+
+</html>
